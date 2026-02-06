@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "OrderLine",
+  "namespace": "com.example.common.avro",
+  "doc": "A single line item in an order.",
+  "fields": [
+    {
+      "name": "sku",
+      "type": "string",
+      "doc": "Stock keeping unit identifier"
+    },
+    {
+      "name": "qty",
+      "type": "int",
+      "doc": "Quantity ordered"
+    }
+  ]
+}

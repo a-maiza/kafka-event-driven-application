@@ -1,0 +1,26 @@
+{
+  "type": "record",
+  "name": "StockReserved",
+  "namespace": "com.example.common.avro",
+  "doc": "Event published when stock is successfully reserved for an order.",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "doc": "Identifier of the order"
+    },
+    {
+      "name": "lines",
+      "type": {
+        "type": "array",
+        "items": "com.example.common.avro.OrderLine"
+      },
+      "doc": "Line items that were reserved"
+    },
+    {
+      "name": "reservedAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of reservation"
+    }
+  ]
+}

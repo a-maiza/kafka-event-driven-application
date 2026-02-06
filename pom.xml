@@ -144,6 +144,20 @@
                     <groupId>org.apache.avro</groupId>
                     <artifactId>avro-maven-plugin</artifactId>
                     <version>${avro.version}</version>
+                    <executions>
+                        <execution>
+                            <id>generate-avro-sources</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>schema</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+                        <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
+                        <stringType>String</stringType>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

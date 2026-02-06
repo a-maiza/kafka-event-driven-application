@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "OrderCancelled",
+  "namespace": "com.example.common.avro",
+  "doc": "Event published when an order is cancelled.",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "doc": "Identifier of the cancelled order"
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "doc": "Reason for cancellation"
+    },
+    {
+      "name": "cancelledAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of cancellation"
+    }
+  ]
+}

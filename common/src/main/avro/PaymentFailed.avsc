@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "PaymentFailed",
+  "namespace": "com.example.common.avro",
+  "doc": "Event published when payment authorization fails.",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "doc": "Identifier of the order"
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "doc": "Reason for payment failure"
+    },
+    {
+      "name": "failedAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of failure"
+    }
+  ]
+}

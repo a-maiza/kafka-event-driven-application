@@ -1,6 +1,6 @@
 # Implementation Tasks — Event-Driven Kafka Microservices
 
-> Derived from [REQUIREMENTS.md](src/REQUIREMENTS.md)
+> Derived from [REQUIREMENTS.md](REQUIREMENTS.md)
 > Stack: Java 21 / Spring Boot 4.x / Maven / Kafka / Kafka Streams / Kafka Connect / Avro + Schema Registry
 > CI/CD: GitHub Actions → Kubernetes
 
@@ -23,7 +23,7 @@
 - **Acceptance**: `mvn clean compile` succeeds across all modules
 
 ### Task 1.2: Create `common` Module — Avro Schemas & Shared Utilities
-- [ ] Define Avro schemas (`.avsc`) for all events:
+- [x] Define Avro schemas (`.avsc`) for all events:
   - `EventEnvelope.avsc` — wrapper with: `eventId`, `type`, `version`, `occurredAt`, `producer`, `correlationId`, `payload`
   - `OrderCreated.avsc` — `id`, `customerId`, `lines[]` (sku, qty), `total`, `status`, `createdAt`
   - `OrderCancelled.avsc` (optional)
@@ -32,9 +32,9 @@
   - `StockReserved.avsc` — `orderId`, `lines[]` (sku, qty), `reservedAt`
   - `StockRejected.avsc` — `orderId`, `reason`, `rejectedAt`
   - `OrderStatusChanged.avsc` — `orderId`, `paymentStatus`, `inventoryStatus`, `finalStatus`, `updatedAt`
-- [ ] Configure `avro-maven-plugin` to generate Java classes from `.avsc` files
-- [ ] Add Schema Registry dependency (`io.confluent:kafka-avro-serializer`)
-- [ ] Implement shared utilities:
+- [x] Configure `avro-maven-plugin` to generate Java classes from `.avsc` files
+- [x] Add Schema Registry dependency (`io.confluent:kafka-avro-serializer`)
+- [x] Implement shared utilities:
   - `TopicNames.java` — constants: `orders.v1`, `payments.v1`, `inventory.v1`, `order-status.v1`, `dead-letter.v1`
   - `CorrelationIdUtils.java` — generate UUID, get/set from Kafka headers, MDC integration
   - `EventEnvelopeBuilder.java` — factory for wrapping payloads in the envelope
