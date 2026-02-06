@@ -1,0 +1,41 @@
+{
+  "type": "record",
+  "name": "OrderCreated",
+  "namespace": "com.example.common.avro",
+  "doc": "Event published when a new order is created.",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "doc": "Unique order identifier (UUID)"
+    },
+    {
+      "name": "customerId",
+      "type": "string",
+      "doc": "Customer who placed the order"
+    },
+    {
+      "name": "lines",
+      "type": {
+        "type": "array",
+        "items": "com.example.common.avro.OrderLine"
+      },
+      "doc": "Line items in the order"
+    },
+    {
+      "name": "total",
+      "type": "string",
+      "doc": "Order total as decimal string (BigDecimal representation)"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "doc": "Current order status (e.g., CREATED)"
+    },
+    {
+      "name": "createdAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of order creation"
+    }
+  ]
+}

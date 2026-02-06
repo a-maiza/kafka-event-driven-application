@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "PaymentAuthorized",
+  "namespace": "com.example.common.avro",
+  "doc": "Event published when payment for an order is authorized.",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "doc": "Identifier of the order"
+    },
+    {
+      "name": "amount",
+      "type": "string",
+      "doc": "Authorized amount as decimal string"
+    },
+    {
+      "name": "authorizedAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of authorization"
+    }
+  ]
+}

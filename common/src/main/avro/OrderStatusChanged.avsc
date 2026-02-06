@@ -1,0 +1,33 @@
+{
+  "type": "record",
+  "name": "OrderStatusChanged",
+  "namespace": "com.example.common.avro",
+  "doc": "Aggregated event published when both payment and inventory outcomes are known.",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "doc": "Identifier of the order"
+    },
+    {
+      "name": "paymentStatus",
+      "type": "string",
+      "doc": "Payment outcome (e.g., AUTHORIZED, FAILED)"
+    },
+    {
+      "name": "inventoryStatus",
+      "type": "string",
+      "doc": "Inventory outcome (e.g., RESERVED, REJECTED)"
+    },
+    {
+      "name": "finalStatus",
+      "type": "string",
+      "doc": "Computed final order status (e.g., CONFIRMED, REJECTED)"
+    },
+    {
+      "name": "updatedAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of status change"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "type": "record",
+  "name": "EventEnvelope",
+  "namespace": "com.example.common.avro",
+  "doc": "Standard envelope wrapping all domain events. The payload field contains the serialized inner Avro event; the type field identifies the concrete event class.",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "doc": "Unique event identifier (UUID)"
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "doc": "Fully qualified Avro record name of the payload (e.g., com.example.common.avro.OrderCreated)"
+    },
+    {
+      "name": "version",
+      "type": "int",
+      "doc": "Schema version of the payload"
+    },
+    {
+      "name": "occurredAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of when the event occurred"
+    },
+    {
+      "name": "producer",
+      "type": "string",
+      "doc": "Name of the service that produced the event"
+    },
+    {
+      "name": "correlationId",
+      "type": "string",
+      "doc": "Correlation ID for distributed tracing"
+    },
+    {
+      "name": "payload",
+      "type": "bytes",
+      "doc": "Avro-serialized payload of the inner domain event"
+    }
+  ]
+}

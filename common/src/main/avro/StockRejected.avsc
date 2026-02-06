@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "StockRejected",
+  "namespace": "com.example.common.avro",
+  "doc": "Event published when stock reservation is rejected.",
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "doc": "Identifier of the order"
+    },
+    {
+      "name": "reason",
+      "type": "string",
+      "doc": "Reason for stock rejection"
+    },
+    {
+      "name": "rejectedAt",
+      "type": "string",
+      "doc": "ISO-8601 timestamp of rejection"
+    }
+  ]
+}
