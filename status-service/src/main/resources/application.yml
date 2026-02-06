@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: status-service
+server:
+  port: 8084
