@@ -56,16 +56,16 @@
 ## Phase 2 — Core Microservices (Event Choreography)
 
 ### Task 2.1: Implement `order-service`
-- [ ] Spring Boot application with its own `application.yml`
-- [ ] REST API:
+- [x] Spring Boot application with its own `application.yml`
+- [x] REST API:
   - `POST /orders` — body: `{ customerId, lines:[{sku, qty}], total }` → response 201: `{ orderId, status }`
   - `GET /orders/{id}` — response 200: `{ id, customerId, lines, total, status, createdAt }`
-- [ ] Domain model: `Order` entity with `id` (UUID), `customerId`, `lines`, `total`, `status` (enum), `createdAt`
-- [ ] In-memory order store (`ConcurrentHashMap` for MVP)
-- [ ] Kafka producer: publish `OrderCreated` (Avro) to `orders.v1` with key = `orderId`
-- [ ] Auto-create topics in dev profile via `KafkaAdmin` + `NewTopic` beans
-- [ ] HTTP filter to generate/propagate `correlationId` + inject into Kafka headers
-- [ ] Spring Boot Actuator: `/actuator/health`, `/actuator/info`, `/actuator/metrics`
+- [x] Domain model: `Order` entity with `id` (UUID), `customerId`, `lines`, `total`, `status` (enum), `createdAt`
+- [x] In-memory order store (`ConcurrentHashMap` for MVP)
+- [x] Kafka producer: publish `OrderCreated` (Avro) to `orders.v1` with key = `orderId`
+- [x] Auto-create topics in dev profile via `KafkaAdmin` + `NewTopic` beans
+- [x] HTTP filter to generate/propagate `correlationId` + inject into Kafka headers
+- [x] Spring Boot Actuator: `/actuator/health`, `/actuator/info`, `/actuator/metrics`
 - **Acceptance**: POST creates order and publishes Avro event to `orders.v1`; GET returns stored order
 
 ### Task 2.2: Implement `payment-service`
