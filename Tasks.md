@@ -80,14 +80,14 @@
 - **Acceptance**: consuming an `OrderCreated` event produces the correct payment outcome to `payments.v1`
 
 ### Task 2.3: Implement `inventory-service`
-- [ ] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
-- [ ] Business logic: simulate stock reservation
+- [x] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
+- [x] Business logic: simulate stock reservation
   - Reserve if all SKUs available → produce `StockReserved`
   - Reject if any SKU unavailable → produce `StockRejected`
-- [ ] Kafka producer: publish to `inventory.v1` with key = `orderId`
-- [ ] Idempotency: deduplicate by `eventId`
-- [ ] Error handling: bounded retries + DLQ
-- [ ] Correlation ID propagation
+- [x] Kafka producer: publish to `inventory.v1` with key = `orderId`
+- [x] Idempotency: deduplicate by `eventId`
+- [x] Error handling: bounded retries + DLQ
+- [x] Correlation ID propagation
 - **Acceptance**: consuming an `OrderCreated` event produces the correct inventory outcome to `inventory.v1`
 
 ### Task 2.4: Implement `status-service` (Aggregator)
