@@ -69,14 +69,14 @@
 - **Acceptance**: POST creates order and publishes Avro event to `orders.v1`; GET returns stored order
 
 ### Task 2.2: Implement `payment-service`
-- [ ] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
-- [ ] Business logic: simulate payment authorization
+- [x] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
+- [x] Business logic: simulate payment authorization
   - Approve if `total < 1000` → produce `PaymentAuthorized`
   - Reject otherwise → produce `PaymentFailed`
-- [ ] Kafka producer: publish to `payments.v1` with key = `orderId`
-- [ ] Idempotency: deduplicate by `eventId` (in-memory set with TTL or bounded cache)
-- [ ] Error handling: `DefaultErrorHandler` with bounded retries (3x exponential backoff) + DLQ
-- [ ] Correlation ID: extract from Kafka headers → MDC → forward to produced events
+- [x] Kafka producer: publish to `payments.v1` with key = `orderId`
+- [x] Idempotency: deduplicate by `eventId` (in-memory set with TTL or bounded cache)
+- [x] Error handling: `DefaultErrorHandler` with bounded retries (3x exponential backoff) + DLQ
+- [x] Correlation ID: extract from Kafka headers → MDC → forward to produced events
 - **Acceptance**: consuming an `OrderCreated` event produces the correct payment outcome to `payments.v1`
 
 ### Task 2.3: Implement `inventory-service`
