@@ -1,5 +1,24 @@
 spring:
   application:
     name: streams-analytics-service
+  kafka:
+    streams:
+      application-id: streams-analytics-service
+      bootstrap-servers: localhost:9092
+      properties:
+        schema.registry.url: http://localhost:8081
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+
 server:
   port: 8086
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{correlationId:-}]"
