@@ -41,14 +41,14 @@
 - **Acceptance**: `mvn clean compile` generates Avro classes; utilities compile with no errors
 
 ### Task 1.3: Update Docker Compose for Full Local Infrastructure
-- [ ] Kafka broker (KRaft mode, Confluent 7.8+) with dual listeners:
-  - Internal: `kafka:9092` (for containers)
-  - External: `localhost:29092` (for host applications)
-- [ ] Confluent Schema Registry (`confluentinc/cp-schema-registry`) on port `8081`
-- [ ] Kafka UI (`provectuslabs/kafka-ui`) on port `8080`
-- [ ] Kafka Connect (`confluentinc/cp-kafka-connect`) with Avro converters on port `8083`
-- [ ] PostgreSQL (for query-service materialized view and JDBC Sink) on port `5432`
-- [ ] Shared Docker network for all services
+- [x] Kafka brokers (3 ZooKeeper + 3 Kafka brokers, Confluent 7.4.1) with dual listeners:
+  - Internal: `broker-N:2909N` (for containers)
+  - External: `localhost:909N` (for host applications)
+- [x] Confluent Schema Registry (`confluentinc/cp-schema-registry`) on port `8081`
+- [x] Kafka UI (`provectuslabs/kafka-ui`) on port `8080`
+- [x] Kafka Connect (`confluentinc/cp-kafka-connect`) with Avro converters on port `8083`
+- [x] PostgreSQL (for query-service materialized view and JDBC Sink) on port `5432`
+- [x] Shared Docker network for all services
 - **Acceptance**: `docker-compose up -d` starts all containers; Schema Registry responds on `http://localhost:8081/subjects`
 
 ---
