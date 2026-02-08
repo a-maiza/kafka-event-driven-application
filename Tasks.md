@@ -127,12 +127,12 @@
 ## Phase 4 — Kafka Connect Integration
 
 ### Task 4.1: Configure JDBC Sink Connector
-- [ ] Connector JSON configuration for JDBC Sink:
+- [x] Connector JSON configuration for JDBC Sink:
   - Export `order-status.v1` topic to PostgreSQL table
   - Use Avro converter with Schema Registry
   - Auto-create destination table
-- [ ] Add JDBC driver and connector plugin to Kafka Connect Docker image
-- [ ] Deployment script/instructions via Connect REST API (`POST /connectors`)
+- [x] Add JDBC driver and connector plugin to Kafka Connect Docker image
+- [x] Deployment script/instructions via Connect REST API (`POST /connectors`)
 - **Acceptance**: events on `order-status.v1` are automatically written to a Postgres table
 
 ### Task 4.2: (Optional) Configure Debezium Source Connector
