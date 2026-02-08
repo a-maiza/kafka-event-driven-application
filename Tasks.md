@@ -91,13 +91,13 @@
 - **Acceptance**: consuming an `OrderCreated` event produces the correct inventory outcome to `inventory.v1`
 
 ### Task 2.4: Implement `status-service` (Aggregator)
-- [ ] Kafka consumer: consume from `payments.v1` AND `inventory.v1`
-- [ ] Aggregation logic per `orderId`:
+- [x] Kafka consumer: consume from `payments.v1` AND `inventory.v1`
+- [x] Aggregation logic per `orderId`:
   - Track partial outcomes (payment result + inventory result) in `ConcurrentHashMap`
   - When both received → determine `finalStatus` and produce `OrderStatusChanged`
-- [ ] Kafka producer: publish to `order-status.v1` with key = `orderId`
-- [ ] Error handling: bounded retries + DLQ
-- [ ] Correlation ID propagation
+- [x] Kafka producer: publish to `order-status.v1` with key = `orderId`
+- [x] Error handling: bounded retries + DLQ
+- [x] Correlation ID propagation
 - **Acceptance**: after both payment and inventory events arrive for an order, `OrderStatusChanged` is published to `order-status.v1`
 
 ---
