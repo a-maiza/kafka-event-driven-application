@@ -112,7 +112,9 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect:7.4.1
+    build:
+      context: ./connect
+      dockerfile: Dockerfile
     hostname: kafka-connect
     container_name: kafka-connect
     depends_on:
@@ -120,6 +122,7 @@ services:
       - broker-2
       - broker-3
       - schema-registry
+      - postgres
     ports:
       - "8083:8083"
     environment:
