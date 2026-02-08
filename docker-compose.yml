@@ -1,48 +1,192 @@
+---
 services:
-
-  kafka:
-    image: confluentinc/cp-kafka:7.8.0
-    hostname: kafka
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "9101:9101"
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-1
+    container_name: zookeeper-1
     environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
-      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: "zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888"
+
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-2
+    container_name: zookeeper-2
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_SERVERS: "zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888"
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-3
+    container_name: zookeeper-3
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_SERVERS: "zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888"
+
+  broker-1:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-1
+    container_name: broker-1
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    ports:
+      - 9091:9091
+      - 29091:29091
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker-1:29091,EXTERNAL://localhost:9091
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29091,EXTERNAL://0.0.0.0:9091
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+
+  broker-2:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-2
+    container_name: broker-2
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker-2:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+
+  broker-3:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-3
+    container_name: broker-3
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    ports:
+      - 9093:9093
+      - 29093:29093
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker-3:29093,EXTERNAL://localhost:9093
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29093,EXTERNAL://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.4.1
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect:7.8.0
+    image: confluentinc/cp-kafka-connect:7.4.1
     hostname: kafka-connect
     container_name: kafka-connect
     depends_on:
-      - kafka
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
     ports:
       - "8083:8083"
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: kafka:29092
+      CONNECT_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
       CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: connect-cluster
       CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 3
       CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 3
       CONNECT_STATUS_STORAGE_TOPIC: _connect-status
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 3
+      CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:7.4.1
+    hostname: rest-proxy
+    container_name: rest-proxy
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+      - broker-1
+      - broker-2
+      - broker-3
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker-1:29091,broker-2:29092,broker-3:29093'
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    hostname: kafka-ui
+    container_name: kafka-ui
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect:8083
+
+  postgres:
+    image: postgres:16-alpine
+    hostname: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
