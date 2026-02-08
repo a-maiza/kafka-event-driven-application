@@ -184,6 +184,7 @@ services:
     container_name: postgres
     ports:
       - "5432:5432"
+    command: ["postgres", "-c", "wal_level=logical"]
     environment:
       POSTGRES_DB: orders
       POSTGRES_USER: app

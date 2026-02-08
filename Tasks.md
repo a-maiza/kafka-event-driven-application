@@ -136,8 +136,8 @@
 - **Acceptance**: events on `order-status.v1` are automatically written to a Postgres table
 
 ### Task 4.2: (Optional) Configure Debezium Source Connector
-- [ ] Debezium PostgreSQL connector configuration for CDC ingestion
-- [ ] Publish database changes to a Kafka topic
+- [x] Debezium PostgreSQL connector configuration for CDC ingestion
+- [x] Publish database changes to a Kafka topic
 - **Acceptance**: inserts/updates in Postgres generate corresponding Kafka events
 
 ---
