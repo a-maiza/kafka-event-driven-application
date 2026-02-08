@@ -105,11 +105,11 @@
 ## Phase 3 — Read Model & Real-Time Analytics
 
 ### Task 3.1: Implement `query-service` (CQRS Read Side)
-- [ ] Kafka consumer: consume `OrderCreated` from `orders.v1` and `OrderStatusChanged` from `order-status.v1`
-- [ ] Materialized view: in-memory store combining order data + aggregated status
-- [ ] REST API: `GET /orders/{id}` → `{ order, paymentStatus, inventoryStatus, finalStatus }`
-- [ ] Idempotency handling for event replay
-- [ ] Spring Boot Actuator enabled
+- [x] Kafka consumer: consume `OrderCreated` from `orders.v1` and `OrderStatusChanged` from `order-status.v1`
+- [x] Materialized view: in-memory store combining order data + aggregated status
+- [x] REST API: `GET /orders/{id}` → `{ order, paymentStatus, inventoryStatus, finalStatus }`
+- [x] Idempotency handling for event replay
+- [x] Spring Boot Actuator enabled
 - **Acceptance**: after the full event flow, `GET /orders/{id}` returns the complete order view with status
 
 ### Task 3.2: Implement `streams-analytics-service` (Kafka Streams)
