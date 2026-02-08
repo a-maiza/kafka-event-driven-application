@@ -113,13 +113,13 @@
 - **Acceptance**: after the full event flow, `GET /orders/{id}` returns the complete order view with status
 
 ### Task 3.2: Implement `streams-analytics-service` (Kafka Streams)
-- [ ] Kafka Streams topology:
+- [x] Kafka Streams topology:
   - Source: `order-status.v1`
   - Aggregate: count events by `finalStatus` (groupBy status → count)
   - Materialized state store: `status-counts-store`
-- [ ] REST API: `GET /kpis/status-counts` → `{ AUTHORIZED: 10, FAILED: 2, RESERVED: 8, ... }`
-- [ ] Interactive queries to expose state store via REST
-- [ ] Avro Serde configuration for Kafka Streams
+- [x] REST API: `GET /kpis/status-counts` → `{ AUTHORIZED: 10, FAILED: 2, RESERVED: 8, ... }`
+- [x] Interactive queries to expose state store via REST
+- [x] Avro Serde configuration for Kafka Streams
 - **Acceptance**: after multiple status events, the KPI endpoint returns correct aggregated counts
 
 ---
