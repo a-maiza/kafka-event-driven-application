@@ -232,8 +232,8 @@
 - **Acceptance**: `helm install` or `kubectl apply` deploys services; pods reach Ready state
 
 ### Task 7.3: GitHub Actions — CI Pipeline (`ci.yml`)
-- [ ] Triggers: PR opened/updated, push to `main`
-- [ ] Steps:
+- [x] Triggers: PR opened/updated, push to `main`
+- [x] Steps:
   1. Checkout code
   2. Setup Java 21 + Maven cache
   3. Run unit tests (`mvn test`)
