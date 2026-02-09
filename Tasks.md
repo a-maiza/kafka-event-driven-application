@@ -145,21 +145,21 @@
 ## Phase 5 — Testing
 
 ### Task 5.1: Unit Tests (All Services) — JUnit 5 + Mockito
-- [ ] `order-service`:
+- [x] `order-service`:
   - Order validation rules (required fields, positive total)
   - REST DTO ↔ Avro event mapping
   - Controller layer tests (MockMvc)
-- [ ] `payment-service`:
+- [x] `payment-service`:
   - Payment authorization decision logic (threshold-based)
   - Event processing and outcome determination
-- [ ] `inventory-service`:
+- [x] `inventory-service`:
   - Stock reservation logic (SKU availability)
   - Event processing and outcome determination
-- [ ] `status-service`:
+- [x] `status-service`:
   - Aggregation logic (partial outcome tracking, final status computation)
-- [ ] `query-service`:
+- [x] `query-service`:
   - Materialized view update logic
-- [ ] `streams-analytics-service`:
+- [x] `streams-analytics-service`:
   - **TopologyTestDriver** tests for Kafka Streams topology (mandatory)
   - Verify correct aggregation counts, edge cases (empty input, duplicate events)
 - **Acceptance**: `mvn test` passes with >80% coverage on business logic
