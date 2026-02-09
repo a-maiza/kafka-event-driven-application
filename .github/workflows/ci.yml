@@ -1,0 +1,170 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '21'
+          cache: maven
+
+      - name: Compile all modules
+        run: mvn clean compile -q
+
+      - name: Run unit tests
+        run: mvn test
+
+      - name: Run integration tests
+        run: mvn verify -DskipTests
+        # Runs failsafe integration tests (Testcontainers).
+        # -DskipTests skips surefire (unit tests already ran above).
+        # Docker is pre-installed on GitHub Actions Ubuntu runners.
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: '**/target/surefire-reports/**'
+          retention-days: 7
+
+  schema-compatibility:
+    name: Avro Schema Compatibility
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '21'
+          cache: maven
+
+      - name: Compile common module (validate schemas)
+        run: mvn compile -pl common -q
+        # avro-maven-plugin generates Java classes from .avsc files.
+        # If any schema is invalid Avro, this step fails.
+
+      - name: Check backward compatibility
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Checking Avro schema backward compatibility against main branch..."
+
+          SCHEMA_DIR="common/src/main/avro"
+          CHANGED_SCHEMAS=$(git diff --name-only origin/main...HEAD -- "$SCHEMA_DIR/*.avsc" || true)
+
+          if [ -z "$CHANGED_SCHEMAS" ]; then
+            echo "No schema changes detected. Skipping compatibility check."
+            exit 0
+          fi
+
+          echo "Changed schemas:"
+          echo "$CHANGED_SCHEMAS"
+          echo ""
+
+          ERRORS=0
+
+          for SCHEMA_FILE in $CHANGED_SCHEMAS; do
+            if [ ! -f "$SCHEMA_FILE" ]; then
+              echo "SKIP: $SCHEMA_FILE (deleted)"
+              continue
+            fi
+
+            SCHEMA_NAME=$(basename "$SCHEMA_FILE")
+            echo "--- Checking $SCHEMA_NAME ---"
+
+            # Get the old version from main branch
+            OLD_SCHEMA=$(git show origin/main:"$SCHEMA_FILE" 2>/dev/null || echo "")
+
+            if [ -z "$OLD_SCHEMA" ]; then
+              echo "OK: $SCHEMA_NAME is a new schema (no baseline on main)"
+              continue
+            fi
+
+            NEW_SCHEMA=$(cat "$SCHEMA_FILE")
+
+            # Extract field names from old schema (required fields that cannot be removed)
+            OLD_FIELDS=$(echo "$OLD_SCHEMA" | python3 -c "
+          import json, sys
+          schema = json.load(sys.stdin)
+          if 'fields' in schema:
+              for f in schema['fields']:
+                  has_default = 'default' in f
+                  nullable = False
+                  if isinstance(f.get('type'), list) and 'null' in f['type']:
+                      nullable = True
+                  print(f['name'] + '|' + str(has_default) + '|' + str(nullable))
+          " 2>/dev/null || echo "")
+
+            # Check that no existing fields were removed (BACKWARD: readers using new schema
+            # must be able to read data written with old schema)
+            NEW_FIELD_NAMES=$(echo "$NEW_SCHEMA" | python3 -c "
+          import json, sys
+          schema = json.load(sys.stdin)
+          if 'fields' in schema:
+              for f in schema['fields']:
+                  print(f['name'])
+          " 2>/dev/null || echo "")
+
+            while IFS='|' read -r FIELD_NAME HAS_DEFAULT NULLABLE; do
+              [ -z "$FIELD_NAME" ] && continue
+              if ! echo "$NEW_FIELD_NAMES" | grep -qx "$FIELD_NAME"; then
+                echo "ERROR: Field '$FIELD_NAME' was removed from $SCHEMA_NAME (breaks backward compatibility)"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done <<< "$OLD_FIELDS"
+
+            # Check that new fields have defaults (BACKWARD: new schema reading old data
+            # needs defaults for fields that old data won't have)
+            echo "$NEW_SCHEMA" | python3 -c "
+          import json, sys
+          old_fields = set('''$OLD_FIELDS'''.strip().split('\n'))
+          old_field_names = {f.split('|')[0] for f in old_fields if f.strip()}
+          schema = json.load(sys.stdin)
+          if 'fields' in schema:
+              for f in schema['fields']:
+                  if f['name'] not in old_field_names:
+                      has_default = 'default' in f
+                      nullable = isinstance(f.get('type'), list) and 'null' in f['type']
+                      if not has_default and not nullable:
+                          print(f'ERROR: New field \"{f[\"name\"]}\" in schema has no default value (breaks backward compatibility)')
+                          sys.exit(1)
+          " 2>/dev/null
+            if [ $? -ne 0 ]; then
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            if [ $ERRORS -eq 0 ]; then
+              echo "OK: $SCHEMA_NAME is backward compatible"
+            fi
+            echo ""
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "FAILED: $ERRORS backward compatibility violation(s) found"
+            exit 1
+          fi
+
+          echo "All schema changes are backward compatible."
