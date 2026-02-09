@@ -175,8 +175,8 @@
 - **Acceptance**: `mvn verify` passes all integration tests with Testcontainers
 
 ### Task 5.3: Kafka Streams Tests
-- [ ] TopologyTestDriver-based tests for `streams-analytics-service` (mandatory)
-- [ ] Verify: aggregation correctness, windowed counts, state store queries
+- [x] TopologyTestDriver-based tests for `streams-analytics-service` (mandatory)
+- [x] Verify: aggregation correctness, windowed counts, state store queries
 - [ ] Optional: integration test with Kafka broker for full pipeline verification
 - **Acceptance**: all streams topology tests pass
 
