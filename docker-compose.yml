@@ -192,5 +192,109 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+    hostname: order-service
+    container_name: order-service
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8181:8081"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: payment-service/Dockerfile
+    hostname: payment-service
+    container_name: payment-service
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8182:8082"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile
+    hostname: inventory-service
+    container_name: inventory-service
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8183:8083"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+  status-service:
+    build:
+      context: .
+      dockerfile: status-service/Dockerfile
+    hostname: status-service
+    container_name: status-service
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8184:8084"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+  query-service:
+    build:
+      context: .
+      dockerfile: query-service/Dockerfile
+    hostname: query-service
+    container_name: query-service
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8185:8085"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+  streams-analytics-service:
+    build:
+      context: .
+      dockerfile: streams-analytics-service/Dockerfile
+    hostname: streams-analytics-service
+    container_name: streams-analytics-service
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - schema-registry
+    ports:
+      - "8186:8086"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SPRING_KAFKA_STREAMS_BOOTSTRAP_SERVERS: broker-1:29091,broker-2:29092,broker-3:29093
+      SPRING_KAFKA_STREAMS_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
 volumes:
   postgres-data:

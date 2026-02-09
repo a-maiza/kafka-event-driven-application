@@ -212,11 +212,11 @@
 ## Phase 7 — Containerization, Kubernetes & CI/CD
 
 ### Task 7.1: Dockerfiles for Each Microservice
-- [ ] Multi-stage Dockerfile per service:
+- [x] Multi-stage Dockerfile per service:
   - Stage 1: Maven build (`maven:3-eclipse-temurin-21`)
   - Stage 2: Runtime (`eclipse-temurin:21-jre-alpine`)
-- [ ] Expose service port and Actuator health check
-- [ ] Image naming convention: `ghcr.io/<org>/<service-name>:<git-sha>` (+ `:latest` for non-prod)
+- [x] Expose service port and Actuator health check
+- [x] Image naming convention: `ghcr.io/<org>/<service-name>:<git-sha>` (+ `:latest` for non-prod)
 - **Acceptance**: `docker build` succeeds for each service; container starts and `/actuator/health` returns UP
 
 ### Task 7.2: Kubernetes Manifests (Helm Charts)
