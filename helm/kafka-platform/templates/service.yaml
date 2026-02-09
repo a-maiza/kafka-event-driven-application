@@ -1,0 +1,19 @@
+{{- range $name, $svc := .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "kafka-platform.labels" $ | nindent 4 }}
+    {{- include "kafka-platform.selectorLabels" (dict "name" $name "root" $) | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ $svc.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "kafka-platform.selectorLabels" (dict "name" $name "root" $) | nindent 4 }}
+{{- end }}

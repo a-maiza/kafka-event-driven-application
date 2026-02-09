@@ -1,0 +1,100 @@
+global:
+  imageRegistry: "ghcr.io/a-maiza"
+  imageTag: "latest"
+  imagePullPolicy: IfNotPresent
+
+springProfile: dev
+
+kafka:
+  bootstrapServers: "broker-1:29091,broker-2:29092,broker-3:29093"
+  schemaRegistryUrl: "http://schema-registry:8081"
+
+secrets:
+  kafkaSaslUsername: ""
+  kafkaSaslPassword: ""
+  postgresPassword: "app"
+
+services:
+  order-service:
+    port: 8081
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 768Mi
+
+  payment-service:
+    port: 8082
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 768Mi
+
+  inventory-service:
+    port: 8083
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 768Mi
+
+  status-service:
+    port: 8084
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 768Mi
+
+  query-service:
+    port: 8085
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 768Mi
+
+  streams-analytics-service:
+    port: 8086
+    replicas: 1
+    resources:
+      requests:
+        cpu: 500m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+ingress:
+  enabled: false
+  className: nginx
+  host: kafka-platform.local
+  tls:
+    enabled: false
+    secretName: kafka-platform-tls
+
+hpa:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+pdb:
+  enabled: false
+  minAvailable: 1

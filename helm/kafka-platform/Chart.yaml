@@ -1,0 +1,6 @@
+apiVersion: v2
+name: kafka-platform
+description: Event-driven microservices platform with Apache Kafka
+type: application
+version: 0.1.0
+appVersion: "0.0.1-SNAPSHOT"

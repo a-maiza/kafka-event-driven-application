@@ -220,15 +220,15 @@
 - **Acceptance**: `docker build` succeeds for each service; container starts and `/actuator/health` returns UP
 
 ### Task 7.2: Kubernetes Manifests (Helm Charts)
-- [ ] Per microservice:
+- [x] Per microservice:
   - `Deployment` with liveness probe (`/actuator/health/liveness`) and readiness probe (`/actuator/health/readiness`)
   - `Service` (ClusterIP)
   - `ConfigMap` for non-sensitive config (`SPRING_PROFILES_ACTIVE`, `SPRING_KAFKA_BOOTSTRAP_SERVERS`, `SCHEMA_REGISTRY_URL`)
   - `Secret` for sensitive config (Kafka SASL credentials, DB passwords)
   - Resource `requests` and `limits`
-- [ ] Environment overlays: `dev`, `staging`, `prod`
-- [ ] Ingress + TLS configuration for production
-- [ ] Optional (MVP+): `HorizontalPodAutoscaler`, `PodDisruptionBudget`, `NetworkPolicies`
+- [x] Environment overlays: `dev`, `staging`, `prod`
+- [x] Ingress + TLS configuration for production
+- [x] Optional (MVP+): `HorizontalPodAutoscaler`, `PodDisruptionBudget`, `NetworkPolicies`
 - **Acceptance**: `helm install` or `kubectl apply` deploys services; pods reach Ready state
 
 ### Task 7.3: GitHub Actions — CI Pipeline (`ci.yml`)

@@ -1,0 +1,66 @@
+springProfile: staging
+
+kafka:
+  bootstrapServers: "kafka-staging-0:9092,kafka-staging-1:9092,kafka-staging-2:9092"
+  schemaRegistryUrl: "http://schema-registry-staging:8081"
+
+services:
+  order-service:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  payment-service:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  inventory-service:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  status-service:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  query-service:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  streams-analytics-service:
+    replicas: 2
+    resources:
+      requests:
+        cpu: "1"
+        memory: 1Gi
+      limits:
+        cpu: "2"
+        memory: 2Gi
