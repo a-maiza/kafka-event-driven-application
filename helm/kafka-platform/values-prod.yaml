@@ -1,0 +1,87 @@
+global:
+  imagePullPolicy: Always
+
+springProfile: prod
+
+kafka:
+  bootstrapServers: "kafka-prod-0:9092,kafka-prod-1:9092,kafka-prod-2:9092"
+  schemaRegistryUrl: "http://schema-registry-prod:8081"
+
+services:
+  order-service:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 1536Mi
+
+  payment-service:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 1536Mi
+
+  inventory-service:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 1536Mi
+
+  status-service:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 1536Mi
+
+  query-service:
+    replicas: 3
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "1"
+        memory: 1536Mi
+
+  streams-analytics-service:
+    replicas: 3
+    resources:
+      requests:
+        cpu: "1"
+        memory: 1536Mi
+      limits:
+        cpu: "2"
+        memory: 2Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: kafka-platform.example.com
+  tls:
+    enabled: true
+    secretName: kafka-platform-tls
+
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+pdb:
+  enabled: true
+  minAvailable: 1

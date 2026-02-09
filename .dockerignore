@@ -1,0 +1,11 @@
+**/target/
+**/.idea/
+**/.vscode/
+**/*.iml
+.git/
+.gitignore
+.dockerignore
+docker-compose.yml
+connect/
+*.md
+CLAUDE.md

@@ -1,5 +1,32 @@
 spring:
   application:
     name: query-service
+  profiles:
+    active: dev
+  kafka:
+    bootstrap-servers: localhost:9091,localhost:9092,localhost:9093
+    consumer:
+      group-id: query-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        schema.registry.url: http://localhost:8081
+        specific.avro.reader: true
+
 server:
   port: 8085
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n"

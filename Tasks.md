@@ -69,35 +69,35 @@
 - **Acceptance**: POST creates order and publishes Avro event to `orders.v1`; GET returns stored order
 
 ### Task 2.2: Implement `payment-service`
-- [ ] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
-- [ ] Business logic: simulate payment authorization
+- [x] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
+- [x] Business logic: simulate payment authorization
   - Approve if `total < 1000` → produce `PaymentAuthorized`
   - Reject otherwise → produce `PaymentFailed`
-- [ ] Kafka producer: publish to `payments.v1` with key = `orderId`
-- [ ] Idempotency: deduplicate by `eventId` (in-memory set with TTL or bounded cache)
-- [ ] Error handling: `DefaultErrorHandler` with bounded retries (3x exponential backoff) + DLQ
-- [ ] Correlation ID: extract from Kafka headers → MDC → forward to produced events
+- [x] Kafka producer: publish to `payments.v1` with key = `orderId`
+- [x] Idempotency: deduplicate by `eventId` (in-memory set with TTL or bounded cache)
+- [x] Error handling: `DefaultErrorHandler` with bounded retries (3x exponential backoff) + DLQ
+- [x] Correlation ID: extract from Kafka headers → MDC → forward to produced events
 - **Acceptance**: consuming an `OrderCreated` event produces the correct payment outcome to `payments.v1`
 
 ### Task 2.3: Implement `inventory-service`
-- [ ] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
-- [ ] Business logic: simulate stock reservation
+- [x] Kafka consumer: consume `OrderCreated` from `orders.v1` (Avro deserialization)
+- [x] Business logic: simulate stock reservation
   - Reserve if all SKUs available → produce `StockReserved`
   - Reject if any SKU unavailable → produce `StockRejected`
-- [ ] Kafka producer: publish to `inventory.v1` with key = `orderId`
-- [ ] Idempotency: deduplicate by `eventId`
-- [ ] Error handling: bounded retries + DLQ
-- [ ] Correlation ID propagation
+- [x] Kafka producer: publish to `inventory.v1` with key = `orderId`
+- [x] Idempotency: deduplicate by `eventId`
+- [x] Error handling: bounded retries + DLQ
+- [x] Correlation ID propagation
 - **Acceptance**: consuming an `OrderCreated` event produces the correct inventory outcome to `inventory.v1`
 
 ### Task 2.4: Implement `status-service` (Aggregator)
-- [ ] Kafka consumer: consume from `payments.v1` AND `inventory.v1`
-- [ ] Aggregation logic per `orderId`:
+- [x] Kafka consumer: consume from `payments.v1` AND `inventory.v1`
+- [x] Aggregation logic per `orderId`:
   - Track partial outcomes (payment result + inventory result) in `ConcurrentHashMap`
   - When both received → determine `finalStatus` and produce `OrderStatusChanged`
-- [ ] Kafka producer: publish to `order-status.v1` with key = `orderId`
-- [ ] Error handling: bounded retries + DLQ
-- [ ] Correlation ID propagation
+- [x] Kafka producer: publish to `order-status.v1` with key = `orderId`
+- [x] Error handling: bounded retries + DLQ
+- [x] Correlation ID propagation
 - **Acceptance**: after both payment and inventory events arrive for an order, `OrderStatusChanged` is published to `order-status.v1`
 
 ---
@@ -105,21 +105,21 @@
 ## Phase 3 — Read Model & Real-Time Analytics
 
 ### Task 3.1: Implement `query-service` (CQRS Read Side)
-- [ ] Kafka consumer: consume `OrderCreated` from `orders.v1` and `OrderStatusChanged` from `order-status.v1`
-- [ ] Materialized view: in-memory store combining order data + aggregated status
-- [ ] REST API: `GET /orders/{id}` → `{ order, paymentStatus, inventoryStatus, finalStatus }`
-- [ ] Idempotency handling for event replay
-- [ ] Spring Boot Actuator enabled
+- [x] Kafka consumer: consume `OrderCreated` from `orders.v1` and `OrderStatusChanged` from `order-status.v1`
+- [x] Materialized view: in-memory store combining order data + aggregated status
+- [x] REST API: `GET /orders/{id}` → `{ order, paymentStatus, inventoryStatus, finalStatus }`
+- [x] Idempotency handling for event replay
+- [x] Spring Boot Actuator enabled
 - **Acceptance**: after the full event flow, `GET /orders/{id}` returns the complete order view with status
 
 ### Task 3.2: Implement `streams-analytics-service` (Kafka Streams)
-- [ ] Kafka Streams topology:
+- [x] Kafka Streams topology:
   - Source: `order-status.v1`
   - Aggregate: count events by `finalStatus` (groupBy status → count)
   - Materialized state store: `status-counts-store`
-- [ ] REST API: `GET /kpis/status-counts` → `{ AUTHORIZED: 10, FAILED: 2, RESERVED: 8, ... }`
-- [ ] Interactive queries to expose state store via REST
-- [ ] Avro Serde configuration for Kafka Streams
+- [x] REST API: `GET /kpis/status-counts` → `{ AUTHORIZED: 10, FAILED: 2, RESERVED: 8, ... }`
+- [x] Interactive queries to expose state store via REST
+- [x] Avro Serde configuration for Kafka Streams
 - **Acceptance**: after multiple status events, the KPI endpoint returns correct aggregated counts
 
 ---
@@ -127,17 +127,17 @@
 ## Phase 4 — Kafka Connect Integration
 
 ### Task 4.1: Configure JDBC Sink Connector
-- [ ] Connector JSON configuration for JDBC Sink:
+- [x] Connector JSON configuration for JDBC Sink:
   - Export `order-status.v1` topic to PostgreSQL table
   - Use Avro converter with Schema Registry
   - Auto-create destination table
-- [ ] Add JDBC driver and connector plugin to Kafka Connect Docker image
-- [ ] Deployment script/instructions via Connect REST API (`POST /connectors`)
+- [x] Add JDBC driver and connector plugin to Kafka Connect Docker image
+- [x] Deployment script/instructions via Connect REST API (`POST /connectors`)
 - **Acceptance**: events on `order-status.v1` are automatically written to a Postgres table
 
 ### Task 4.2: (Optional) Configure Debezium Source Connector
-- [ ] Debezium PostgreSQL connector configuration for CDC ingestion
-- [ ] Publish database changes to a Kafka topic
+- [x] Debezium PostgreSQL connector configuration for CDC ingestion
+- [x] Publish database changes to a Kafka topic
 - **Acceptance**: inserts/updates in Postgres generate corresponding Kafka events
 
 ---
@@ -145,21 +145,21 @@
 ## Phase 5 — Testing
 
 ### Task 5.1: Unit Tests (All Services) — JUnit 5 + Mockito
-- [ ] `order-service`:
+- [x] `order-service`:
   - Order validation rules (required fields, positive total)
   - REST DTO ↔ Avro event mapping
   - Controller layer tests (MockMvc)
-- [ ] `payment-service`:
+- [x] `payment-service`:
   - Payment authorization decision logic (threshold-based)
   - Event processing and outcome determination
-- [ ] `inventory-service`:
+- [x] `inventory-service`:
   - Stock reservation logic (SKU availability)
   - Event processing and outcome determination
-- [ ] `status-service`:
+- [x] `status-service`:
   - Aggregation logic (partial outcome tracking, final status computation)
-- [ ] `query-service`:
+- [x] `query-service`:
   - Materialized view update logic
-- [ ] `streams-analytics-service`:
+- [x] `streams-analytics-service`:
   - **TopologyTestDriver** tests for Kafka Streams topology (mandatory)
   - Verify correct aggregation counts, edge cases (empty input, duplicate events)
 - **Acceptance**: `mvn test` passes with >80% coverage on business logic
@@ -212,23 +212,23 @@
 ## Phase 7 — Containerization, Kubernetes & CI/CD
 
 ### Task 7.1: Dockerfiles for Each Microservice
-- [ ] Multi-stage Dockerfile per service:
+- [x] Multi-stage Dockerfile per service:
   - Stage 1: Maven build (`maven:3-eclipse-temurin-21`)
   - Stage 2: Runtime (`eclipse-temurin:21-jre-alpine`)
-- [ ] Expose service port and Actuator health check
-- [ ] Image naming convention: `ghcr.io/<org>/<service-name>:<git-sha>` (+ `:latest` for non-prod)
+- [x] Expose service port and Actuator health check
+- [x] Image naming convention: `ghcr.io/<org>/<service-name>:<git-sha>` (+ `:latest` for non-prod)
 - **Acceptance**: `docker build` succeeds for each service; container starts and `/actuator/health` returns UP
 
 ### Task 7.2: Kubernetes Manifests (Helm Charts)
-- [ ] Per microservice:
+- [x] Per microservice:
   - `Deployment` with liveness probe (`/actuator/health/liveness`) and readiness probe (`/actuator/health/readiness`)
   - `Service` (ClusterIP)
   - `ConfigMap` for non-sensitive config (`SPRING_PROFILES_ACTIVE`, `SPRING_KAFKA_BOOTSTRAP_SERVERS`, `SCHEMA_REGISTRY_URL`)
   - `Secret` for sensitive config (Kafka SASL credentials, DB passwords)
   - Resource `requests` and `limits`
-- [ ] Environment overlays: `dev`, `staging`, `prod`
-- [ ] Ingress + TLS configuration for production
-- [ ] Optional (MVP+): `HorizontalPodAutoscaler`, `PodDisruptionBudget`, `NetworkPolicies`
+- [x] Environment overlays: `dev`, `staging`, `prod`
+- [x] Ingress + TLS configuration for production
+- [x] Optional (MVP+): `HorizontalPodAutoscaler`, `PodDisruptionBudget`, `NetworkPolicies`
 - **Acceptance**: `helm install` or `kubectl apply` deploys services; pods reach Ready state
 
 ### Task 7.3: GitHub Actions — CI Pipeline (`ci.yml`)
