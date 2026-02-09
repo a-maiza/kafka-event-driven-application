@@ -242,10 +242,10 @@
 - **Acceptance**: CI pipeline runs on PRs and reports pass/fail
 
 ### Task 7.4: GitHub Actions — CD Pipeline (`cd.yml`)
-- [ ] Triggers:
+- [x] Triggers:
   - Push to `main` → deploy to `dev`/`staging`
   - Release tag → deploy to `prod` (with manual approval gate)
-- [ ] Steps:
+- [x] Steps:
   1. Checkout
   2. Setup Java 21 + Maven cache
   3. Build + test
@@ -254,7 +254,7 @@
   6. Push images tagged by commit SHA
   7. Deploy to Kubernetes via Helm/kubectl
   8. Optional smoke test: `curl /actuator/health` for deployed services
-- [ ] GitHub Environments: `dev`, `staging`, `prod`
+- [x] GitHub Environments: `dev`, `staging`, `prod`
 - **Acceptance**: merge to `main` triggers automatic deployment to dev; release tag triggers gated prod deploy
 
 ---
