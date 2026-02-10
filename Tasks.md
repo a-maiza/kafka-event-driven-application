@@ -200,11 +200,11 @@
 - **Acceptance**: all Actuator endpoints respond; Kafka metrics visible in `/actuator/metrics`
 
 ### Task 6.3: Error Handling — Retries & DLQ
-- [ ] Configure `DefaultErrorHandler` per consumer service:
+- [x] Configure `DefaultErrorHandler` per consumer service:
   - Bounded retries (e.g., 3 attempts with exponential backoff)
   - `DeadLetterPublishingRecoverer` for non-recoverable failures
-- [ ] DLQ topics: `<service>.dlq.v1` or shared `dead-letter.v1`
-- [ ] DLQ messages preserve original headers (`correlationId`, `eventId`) + error metadata
+- [x] DLQ topics: `<service>.dlq.v1` or shared `dead-letter.v1`
+- [x] DLQ messages preserve original headers (`correlationId`, `eventId`) + error metadata
 - **Acceptance**: poisoned messages are retried N times then land in DLQ with full context
 
 ---
