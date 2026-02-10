@@ -35,6 +35,8 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
         props.put("schema.registry.url", schemaRegistryUrl);
+        props.put("value.subject.name.strategy",
+                "io.confluent.kafka.serializers.subject.TopicNameStrategy");
         props.put(StreamsConfig.DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG,
                 LogAndContinueExceptionHandler.class);
         return new KafkaStreamsConfiguration(props);

@@ -48,6 +48,11 @@ jobs:
   schema-compatibility:
     name: Avro Schema Compatibility
     runs-on: ubuntu-latest
+    # Governance: BACKWARD compatibility enforced on Schema Registry (docker-compose.yml).
+    # TopicNameStrategy configured explicitly in all producer/consumer configs.
+    # For local validation against a running Schema Registry, use:
+    #   mvn validate -pl common -Pschema-check
+    # (requires docker compose up schema-registry)
 
     steps:
       - name: Checkout code

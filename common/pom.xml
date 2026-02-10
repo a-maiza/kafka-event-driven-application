@@ -24,6 +24,12 @@
             <groupId>io.confluent</groupId>
             <artifactId>kafka-avro-serializer</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -39,5 +45,40 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>schema-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.confluent</groupId>
+                        <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                        <version>${confluent.version}</version>
+                        <configuration>
+                            <schemaRegistryUrls>
+                                <param>http://localhost:8081</param>
+                            </schemaRegistryUrls>
+                            <subjects>
+                                <orders.v1-value>${project.basedir}/src/main/avro/OrderCreated.avsc</orders.v1-value>
+                                <payments.v1-value>${project.basedir}/src/main/avro/PaymentAuthorized.avsc</payments.v1-value>
+                                <inventory.v1-value>${project.basedir}/src/main/avro/StockReserved.avsc</inventory.v1-value>
+                                <order-status.v1-value>${project.basedir}/src/main/avro/OrderStatusChanged.avsc</order-status.v1-value>
+                            </subjects>
+                            <schemaTypes>
+                                <orders.v1-value>AVRO</orders.v1-value>
+                                <payments.v1-value>AVRO</payments.v1-value>
+                                <inventory.v1-value>AVRO</inventory.v1-value>
+                                <order-status.v1-value>AVRO</order-status.v1-value>
+                            </schemaTypes>
+                        </configuration>
+                        <goals>
+                            <goal>test-compatibility</goal>
+                        </goals>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
