@@ -185,12 +185,12 @@
 ## Phase 6 — Observability & Cross-Cutting Concerns
 
 ### Task 6.1: Structured Logging & Correlation ID Propagation
-- [ ] HTTP servlet filter in each REST service:
+- [x] HTTP servlet filter in each REST service:
   - Generate `correlationId` (UUID) if not present in incoming `X-Correlation-Id` header
   - Set in SLF4J MDC for structured log output
-- [ ] Kafka producer interceptor/header enrichment: add `correlationId` to Kafka record headers
-- [ ] Kafka consumer: extract `correlationId` from headers → set in MDC → forward downstream
-- [ ] Configure structured JSON logging (Logback/Log4j2)
+- [x] Kafka producer interceptor/header enrichment: add `correlationId` to Kafka record headers
+- [x] Kafka consumer: extract `correlationId` from headers → set in MDC → forward downstream
+- [x] Configure structured JSON logging (Logback/Log4j2)
 - **Acceptance**: a single request's `correlationId` is traceable across REST → Kafka → all downstream consumers in logs
 
 ### Task 6.2: Spring Boot Actuator & Metrics

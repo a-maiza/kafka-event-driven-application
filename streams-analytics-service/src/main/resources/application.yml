@@ -20,5 +20,6 @@ management:
         include: health,info,metrics
 
 logging:
-  pattern:
-    level: "%5p [${spring.application.name},%X{correlationId:-}]"
+  structured:
+    format:
+      console: logstash
