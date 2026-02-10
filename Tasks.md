@@ -194,9 +194,9 @@
 - **Acceptance**: a single request's `correlationId` is traceable across REST → Kafka → all downstream consumers in logs
 
 ### Task 6.2: Spring Boot Actuator & Metrics
-- [ ] Enable `/actuator/health`, `/actuator/info`, `/actuator/metrics` per service
-- [ ] Kafka consumer/producer metrics exposed via Micrometer
-- [ ] Optional (MVP+): Prometheus metrics endpoint (`/actuator/prometheus`)
+- [x] Enable `/actuator/health`, `/actuator/info`, `/actuator/metrics` per service
+- [x] Kafka consumer/producer metrics exposed via Micrometer
+- [x] Optional (MVP+): Prometheus metrics endpoint (`/actuator/prometheus`)
 - **Acceptance**: all Actuator endpoints respond; Kafka metrics visible in `/actuator/metrics`
 
 ### Task 6.3: Error Handling — Retries & DLQ
