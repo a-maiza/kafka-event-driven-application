@@ -165,8 +165,8 @@
 - **Acceptance**: `mvn test` passes with >80% coverage on business logic
 
 ### Task 5.2: Integration Tests — Testcontainers
-- [ ] Add `testcontainers` and `testcontainers-kafka` dependencies to parent POM
-- [ ] Integration tests per service:
+- [x] Add `testcontainers` and `testcontainers-kafka` dependencies to parent POM
+- [x] Integration tests per service:
   - Producer serialization with Avro + Schema Registry container
   - Consumer deserialization with Avro
   - DLQ behavior: force exceptions → verify messages land in DLQ topic
