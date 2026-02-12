@@ -262,10 +262,10 @@
 ## Phase 8 — Hardening & Governance
 
 ### Task 8.1: Schema Registry Governance
-- [ ] Set compatibility mode to `BACKWARD` on Schema Registry
-- [ ] Naming strategy: `TopicNameStrategy` consistently across all services
-- [ ] CI step to validate schema compatibility before merge
-- [ ] Fail-fast behavior if Schema Registry unreachable (non-dev profiles)
+- [x] Set compatibility mode to `BACKWARD` on Schema Registry
+- [x] Naming strategy: `TopicNameStrategy` consistently across all services
+- [x] CI step to validate schema compatibility before merge
+- [x] Fail-fast behavior if Schema Registry unreachable (non-dev profiles)
 - **Acceptance**: incompatible schema changes are rejected in CI; services fail fast without Schema Registry in staging/prod
 
 ### Task 8.2: Secrets Management
